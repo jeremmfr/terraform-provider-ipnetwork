@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    commit-message:
+      prefix: "👷 workflows:"
+    schedule:
+      interval: daily
+    assignees:
+      - "jeremmfr"
+  - package-ecosystem: gomod
+    directory: /
+    commit-message:
+      prefix: "⬆️ deps:"
+    schedule:
+      interval: daily
+    assignees:
+      - "jeremmfr"

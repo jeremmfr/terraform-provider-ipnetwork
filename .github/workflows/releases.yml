@@ -1,0 +1,124 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      id: ${{steps.create_release.outputs.id}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set env RELEASE_VERSION
+        run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF} | cut -d'/' -f3)" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          name: ${{ env.RELEASE_VERSION }}
+          omitBody: true
+          draft: true
+          prerelease: false
+
+  assets:
+    name: Push assets for ${{ matrix.goos }}/${{ matrix.goarch }}
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel multiple OS/ARCH
+        goos: [linux, windows, darwin, freebsd]
+        goarch: [amd64, arm64]
+        exclude:
+          - goos: windows
+            goarch: arm64
+    steps:
+      - name: Set up Go 1.24
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          check-latest: true
+        id: go
+      - name: Show version
+        run: go version
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set env
+        run: |
+          echo "CGO_ENABLED=0" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$(echo ${GITHUB_REF} | cut -d'/' -f3 | sed 's/^v//')" >> $GITHUB_ENV
+          echo "REPO_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "GOOS=$(echo ${{ matrix.goos }})" >> $GITHUB_ENV
+          echo "GOARCH=$(echo ${{ matrix.goarch }})" >> $GITHUB_ENV
+      - name: Define version in build
+        run: echo ${RELEASE_VERSION} > internal/version/version.txt
+      - name: Build
+        run: go build -ldflags "-s -w" -o ${REPO_NAME}_v${RELEASE_VERSION} -trimpath .
+      - name: Rename binary for windows
+        run: |
+          if [[ "${{ matrix.goos }}" == "windows" ]] ; then
+            mv ${REPO_NAME}_v${RELEASE_VERSION} ${REPO_NAME}_v${RELEASE_VERSION}.exe
+          fi
+      - name: Create archive zip
+        run: zip ${REPO_NAME}_${RELEASE_VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.zip ${REPO_NAME}_v${RELEASE_VERSION}*
+      - name: Upload archive zip to release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          artifactContentType: application/zip
+          artifacts: "${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_*.zip"
+
+  shasum_zip:
+    name: Create sha256 sum for each zip
+    needs: [release,assets]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Install utils
+        run: |
+          sudo apt update
+          sudo apt install -y jq libdigest-sha-perl
+      - name: Set env
+        run: |
+          echo "RELEASE_VERSION=$(echo ${GITHUB_REF} | cut -d'/' -f3 | sed 's/^v//')" >> $GITHUB_ENV
+          echo "REPO_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "USER_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f1)" >> $GITHUB_ENV
+      - name: Download zip
+        run: |
+          for asset in $(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ env.USER_NAME }}/${{ env.REPO_NAME }}/releases/${{ needs.release.outputs.id }} | \
+            jq -r '.assets[] | .url+","+.name')
+          do
+            asset_url=$(echo ${asset} | cut -d',' -f1)
+            asset_name=$(echo ${asset} | cut -d',' -f2)
+            curl -J -L -H "Accept: application/octet-stream" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            ${asset_url} -o ${asset_name}
+          done
+      - name: List files
+        run: ls -la
+      - name: Rename registry manifest json file
+        run: cp terraform-registry-manifest.json ${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_manifest.json
+      - name: Generate SHA256SUMS
+        run: shasum -a 256 ${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_*.zip ${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_manifest.json > ${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_SHA256SUMS
+      - name: Upload shasum result
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          artifactContentType: application/octet-stream
+          artifacts: ${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_SHA256SUMS,${{ env.REPO_NAME }}_${{ env.RELEASE_VERSION }}_manifest.json
