@@ -47,6 +47,7 @@ func (p *ipnetworkProvider) DataSources(_ context.Context) []func() datasource.D
 
 func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Function {
 	return []func() function.Function{
+		newAddressFunction,
 		newCidrFunction,
 	}
 }
