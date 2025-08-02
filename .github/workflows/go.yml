@@ -25,6 +25,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 'latest'
+          terraform_wrapper: false
       - name: Set up Go 1.24
         uses: actions/setup-go@v5
         with:

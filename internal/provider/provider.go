@@ -46,7 +46,9 @@ func (p *ipnetworkProvider) DataSources(_ context.Context) []func() datasource.D
 }
 
 func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Function {
-	return []func() function.Function{}
+	return []func() function.Function{
+		newCidrFunction,
+	}
 }
 
 func (p *ipnetworkProvider) Configure(_ context.Context, _ provider.ConfigureRequest, _ *provider.ConfigureResponse) {
