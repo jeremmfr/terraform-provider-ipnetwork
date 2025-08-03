@@ -49,6 +49,7 @@ func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Funct
 	return []func() function.Function{
 		newAddressFunction,
 		newCidrFunction,
+		newExpand6Function,
 	}
 }
 
