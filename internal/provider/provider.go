@@ -51,6 +51,8 @@ func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Funct
 		newBitsFunction,
 		newCidrFunction,
 		newExpand6Function,
+		newIs4Function,
+		newIs6Function,
 		newPrefixFunction,
 		newPtrFunction,
 	}
