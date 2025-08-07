@@ -59,6 +59,7 @@ func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Funct
 		newPrefixFunction,
 		newPtrFunction,
 		newTranslate4to6Function,
+		newTranslate6to4Function,
 	}
 }
 
