@@ -56,3 +56,71 @@ func ptrNameFromIP(ip netip.Addr) string {
 
 	return ""
 }
+
+func translateAddress4to6(address netip.Addr, prefix netip.Prefix) netip.Addr {
+	if !address.IsValid() || !address.Is4() {
+		return netip.Addr{}
+	}
+	if !prefix.IsValid() || !prefix.Addr().Is6() {
+		return netip.Addr{}
+	}
+
+	prefixOcts := prefix.Masked().Addr().AsSlice()
+
+	switch bits := prefix.Bits(); {
+	case bits <= 32:
+		result, _ := netip.AddrFromSlice(append(append(
+			prefixOcts[:4],
+			address.AsSlice()...),
+			[]byte{0, 0, 0, 0, 0, 0, 0, 0}...,
+		))
+
+		return result
+	case bits > 32 && bits <= 40:
+		result, _ := netip.AddrFromSlice(append(append(append(append(
+			prefixOcts[:5],
+			address.AsSlice()[:3]...),
+			byte(0)),
+			address.AsSlice()[3:]...),
+			[]byte{0, 0, 0, 0, 0, 0}...,
+		))
+
+		return result
+	case bits > 40 && bits <= 48:
+		result, _ := netip.AddrFromSlice(append(append(append(append(
+			prefixOcts[:6],
+			address.AsSlice()[:2]...),
+			byte(0)),
+			address.AsSlice()[2:]...),
+			[]byte{0, 0, 0, 0, 0}...,
+		))
+
+		return result
+	case bits > 48 && bits <= 56:
+		result, _ := netip.AddrFromSlice(append(append(append(append(
+			prefixOcts[:7],
+			address.AsSlice()[:1]...),
+			byte(0)),
+			address.AsSlice()[1:]...),
+			[]byte{0, 0, 0, 0}...,
+		))
+
+		return result
+	case bits > 56 && bits <= 64:
+		result, _ := netip.AddrFromSlice(append(append(append(
+			prefixOcts[:8],
+			byte(0)),
+			address.AsSlice()...),
+			[]byte{0, 0, 0}...,
+		))
+
+		return result
+	default:
+		result, _ := netip.AddrFromSlice(append(
+			prefixOcts[:12],
+			address.AsSlice()...),
+		)
+
+		return result
+	}
+}
