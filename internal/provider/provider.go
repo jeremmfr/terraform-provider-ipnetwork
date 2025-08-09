@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 
-	"github.com/jeremmfr/terraform-provider-ipnetwork/version"
+	"github.com/jeremmfr/terraform-provider-ipnetwork/internal/version"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
