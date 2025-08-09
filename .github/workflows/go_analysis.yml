@@ -4,6 +4,9 @@ on:
   pull_request:
   schedule:
     - cron: '11 12 * * 3'
+permissions:
+  contents: read
+  security-events: write
 jobs:
   Vulncheck:
     runs-on: ubuntu-latest
