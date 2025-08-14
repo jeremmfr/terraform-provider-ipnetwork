@@ -5,12 +5,17 @@ permissions:
 jobs:
   build:
     name: Build
+    strategy:
+      matrix:
+        golang:
+          - '1.24'
+          - '1.25'
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.24
+      - name: Set up Go ${{ matrix.golang }}
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: ${{ matrix.golang }}
           check-latest: true
         id: go
       - name: Disable cgo
@@ -26,15 +31,20 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        golang:
+          - '1.24'
+          - '1.25'
     steps:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 'latest'
           terraform_wrapper: false
-      - name: Set up Go 1.24
+      - name: Set up Go ${{ matrix.golang }}
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: ${{ matrix.golang }}
           check-latest: true
         id: go
       - name: Disable cgo
