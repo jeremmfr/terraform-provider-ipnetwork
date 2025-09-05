@@ -104,7 +104,7 @@ func TestAccFunctionAddressPort(t *testing.T) {
 							Config: `
 							output "test" {
 								value = provider::ipnetwork::address_port("` +
-								test.inputAddress + `",` + strconv.FormatInt(int64(test.inputPort), 10) +
+								test.inputAddress + `", ` + strconv.FormatInt(int64(test.inputPort), 10) +
 								`)
 							}
 							`,
@@ -123,7 +123,7 @@ func TestAccFunctionAddressPort(t *testing.T) {
 							Config: `
 							output "test" {
 								value = provider::ipnetwork::address_port("` +
-								test.inputAddress + `",` + strconv.FormatInt(int64(test.inputPort), 10) +
+								test.inputAddress + `", ` + strconv.FormatInt(int64(test.inputPort), 10) +
 								`)
 							}
 							`,

@@ -122,7 +122,7 @@ func TestAccFunctionEqualAddress(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::equal_address("` + test.addressX + `","` + test.addressY + `")
+								value = provider::ipnetwork::equal_address("` + test.addressX + `", "` + test.addressY + `")
 							}
 							`,
 							ExpectError: test.expectError,
@@ -139,7 +139,7 @@ func TestAccFunctionEqualAddress(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::equal_address("` + test.addressX + `","` + test.addressY + `")
+								value = provider::ipnetwork::equal_address("` + test.addressX + `", "` + test.addressY + `")
 							}
 							`,
 							ConfigStateChecks: []statecheck.StateCheck{
