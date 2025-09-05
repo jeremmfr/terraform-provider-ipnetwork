@@ -31,4 +31,4 @@ equal_address(address_x string, address_y string) boolean
 ## Arguments
 
 1. `address_x` (String) First address to parse
-1. `address_y` (String) Second address to parse
+2. `address_y` (String) Second address to parse
