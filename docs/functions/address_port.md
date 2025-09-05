@@ -8,7 +8,7 @@ description: |-
 
 Generate an ip:port string representation from IP address and port (add square brackets for IPv6 address).
 
-Trim mask if input is in CIDR format and trim potential scoped zone for IPv6 address.
+Trim mask if `address` is in CIDR format and trim potential scoped zone for IPv6 address.
 
 ## Example Usage
 
