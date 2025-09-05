@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"net"
 	"net/netip"
 	"slices"
 	"strconv"
@@ -165,4 +166,26 @@ func translateAddress6to4(address netip.Prefix) netip.Addr {
 
 		return result
 	}
+}
+
+func computeIPv6AddressEUI64(prefix netip.Addr, mac net.HardwareAddr) netip.Addr {
+	if !prefix.Is6() || len(mac) != 6 {
+		return netip.Addr{}
+	}
+
+	newAddress := prefix.AsSlice()
+
+	// copy first part of mac
+	copy(newAddress[8:11], mac[0:3])
+	// revert the "u" bit
+	newAddress[8] ^= 0x02
+	// insert FFFE hexadecimal
+	newAddress[11] = 0xff
+	newAddress[12] = 0xfe
+	// copy second part of mac
+	copy(newAddress[13:16], mac[3:6])
+
+	newAddr, _ := netip.AddrFromSlice(newAddress)
+
+	return newAddr
 }
