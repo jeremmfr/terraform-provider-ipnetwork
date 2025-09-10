@@ -1,6 +1,19 @@
 <!-- markdownlint-disable-file MD013 -->
 # changelog
 
+## [v1.1.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.1.0) (2025-09-10)
+
+FEATURES:
+
+* add new functions:
+  * `address_port(address string, port number) string`: generate an ip:port string representation.
+  * `generate6_eui64(prefix string, mac string) string`: generate an IPv6 address from MAC address with the modified EUI-64 format.
+  * `generate6_opaque(prefix string, net_iface string, network_id string, dad_counter number, secret_key string) string`: generate an IPv6 address with an opaque interface identifier.
+
+ENHANCEMENTS:
+
+* release now with Go 1.25.
+
 ## [v1.0.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.0.0) (2025-08-09)
 
 First release with this functions:
