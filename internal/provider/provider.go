@@ -48,12 +48,15 @@ func (p *ipnetworkProvider) DataSources(_ context.Context) []func() datasource.D
 func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Function {
 	return []func() function.Function{
 		newAddressFunction,
+		newAddressPortFunction,
 		newBitsFunction,
 		newCidrFunction,
 		newContainFunction,
 		newEqualAddressFunction,
 		newEqualPrefixFunction,
 		newExpand6Function,
+		newGenerate6EUI64Function,
+		newGenerate6OpaqueFunction,
 		newIs4Function,
 		newIs6Function,
 		newPrefixFunction,

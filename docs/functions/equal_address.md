@@ -16,7 +16,7 @@ output "ip_v4" {
 }
 # result: true
 
-output "ip_v6_match" {
+output "ip_v6" {
   value = provider::ipnetwork::equal_address("2001:0db8:0:0:0:0:0:f", "2001:db8::f/64")
 }
 # result: true
@@ -31,4 +31,4 @@ equal_address(address_x string, address_y string) boolean
 ## Arguments
 
 1. `address_x` (String) First address to parse
-1. `address_y` (String) Second address to parse
+2. `address_y` (String) Second address to parse

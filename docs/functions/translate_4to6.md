@@ -44,4 +44,4 @@ translate_4to6(address string, prefix string) string
 ## Arguments
 
 1. `address` (String) Address to parse
-1. `prefix` (String) Prefix address to parse
+2. `prefix` (String) Prefix address to parse

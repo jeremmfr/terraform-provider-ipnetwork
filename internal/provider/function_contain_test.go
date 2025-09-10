@@ -182,7 +182,7 @@ func TestAccFunctionEqualContains(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::contain("` + test.container + `","` + test.address + `")
+								value = provider::ipnetwork::contain("` + test.container + `", "` + test.address + `")
 							}
 							`,
 							ExpectError: test.expectError,
@@ -199,7 +199,7 @@ func TestAccFunctionEqualContains(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::contain("` + test.container + `","` + test.address + `")
+								value = provider::ipnetwork::contain("` + test.container + `", "` + test.address + `")
 							}
 							`,
 							ConfigStateChecks: []statecheck.StateCheck{

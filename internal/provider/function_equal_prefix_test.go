@@ -157,7 +157,7 @@ func TestAccFunctionEqualPrefix(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::equal_prefix("` + test.addressX + `","` + test.addressY + `")
+								value = provider::ipnetwork::equal_prefix("` + test.addressX + `", "` + test.addressY + `")
 							}
 							`,
 							ExpectError: test.expectError,
@@ -174,7 +174,7 @@ func TestAccFunctionEqualPrefix(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::equal_prefix("` + test.addressX + `","` + test.addressY + `")
+								value = provider::ipnetwork::equal_prefix("` + test.addressX + `", "` + test.addressY + `")
 							}
 							`,
 							ConfigStateChecks: []statecheck.StateCheck{
