@@ -16,7 +16,7 @@ output "ip_v4" {
 }
 # result: true
 
-output "ip_v6_match" {
+output "ip_v6" {
   value = provider::ipnetwork::equal_address("2001:0db8:0:0:0:0:0:f", "2001:db8::f/64")
 }
 # result: true
