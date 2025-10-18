@@ -62,6 +62,7 @@ func (p *ipnetworkProvider) Functions(_ context.Context) []func() function.Funct
 		newIsPrivateFunction,
 		newIsPrivateRFC1918Function,
 		newIsPrivateRFC4193Function,
+		newIsPrivateRFC6598Function,
 		newIsPublicFunction,
 		newPrefixFunction,
 		newPtrFunction,
