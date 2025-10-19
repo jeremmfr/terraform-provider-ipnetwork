@@ -64,172 +64,172 @@ func TestTranslateAddress4to6(t *testing.T) {
 	}
 
 	tests := map[string]testCase{
-		"min_/31": {
+		"min_31": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/31"),
 			expectAddr: netip.MustParseAddr("3fff:0:fffe:fdfc:0:0:0:0"),
 		},
-		"max_/31": {
+		"max_31": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/31"),
 			expectAddr: netip.MustParseAddr("3fff:fffe:aabb:ccdd:0:0:0:0"),
 		},
-		"min_/32": {
+		"min_32": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/32"),
 			expectAddr: netip.MustParseAddr("3fff:0:fffe:fdfc:0:0:0:0"),
 		},
-		"max_/32": {
+		"max_32": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/32"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:aabb:ccdd:0:0:0:0"),
 		},
-		"min_/33": {
+		"min_33": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/33"),
 			expectAddr: netip.MustParseAddr("3fff:0:ff:fefd:fc:0:0:0"),
 		},
-		"max_/33": {
+		"max_33": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/33"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:80aa:bbcc:dd:0:0:0"),
 		},
-		"min_/39": {
+		"min_39": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/39"),
 			expectAddr: netip.MustParseAddr("3fff:0:ff:fefd:fc:0:0:0"),
 		},
-		"max_/39": {
+		"max_39": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/39"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:feaa:bbcc:dd:0:0:0"),
 		},
-		"min_/40": {
+		"min_40": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/40"),
 			expectAddr: netip.MustParseAddr("3fff:0:ff:fefd:fc:0:0:0"),
 		},
-		"max_/40": {
+		"max_40": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/40"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffaa:bbcc:dd:0:0:0"),
 		},
-		"min_/41": {
+		"min_41": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/41"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:fffe:fd:fc00:0:0"),
 		},
-		"max_/41": {
+		"max_41": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/41"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ff80:aabb:cc:dd00:0:0"),
 		},
-		"min_/47": {
+		"min_47": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/47"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:fffe:fd:fc00:0:0"),
 		},
-		"max_/47": {
+		"max_47": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/47"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:fffe:aabb:cc:dd00:0:0"),
 		},
-		"min_/48": {
+		"min_48": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/48"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:fffe:fd:fc00:0:0"),
 		},
-		"max_/48": {
+		"max_48": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/48"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:aabb:cc:dd00:0:0"),
 		},
-		"min_/49": {
+		"min_49": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/49"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:ff:fe:fdfc:0:0"),
 		},
-		"max_/49": {
+		"max_49": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/49"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:80aa:bb:ccdd:0:0"),
 		},
-		"min_/55": {
+		"min_55": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/55"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:ff:fe:fdfc:0:0"),
 		},
-		"max_/55": {
+		"max_55": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/55"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:feaa:bb:ccdd:0:0"),
 		},
-		"min_/56": {
+		"min_56": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/56"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:ff:fe:fdfc:0:0"),
 		},
-		"max_/56": {
+		"max_56": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/56"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ffaa:bb:ccdd:0:0"),
 		},
-		"min_/57": {
+		"min_57": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/57"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:ff:fefd:fc00:0"),
 		},
-		"max_/57": {
+		"max_57": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/57"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ff80:aa:bbcc:dd00:0"),
 		},
-		"min_/63": {
+		"min_63": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/63"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:ff:fefd:fc00:0"),
 		},
-		"max_/63": {
+		"max_63": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/63"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:fffe:aa:bbcc:dd00:0"),
 		},
-		"min_/64": {
+		"min_64": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/64"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:ff:fefd:fc00:0"),
 		},
-		"max_/64": {
+		"max_64": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/64"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ffff:aa:bbcc:dd00:0"),
 		},
-		"min_/65": {
+		"min_65": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/65"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:0:0:fffe:fdfc"),
 		},
-		"max_/65": {
+		"max_65": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/65"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ffff:8000:0:aabb:ccdd"),
 		},
-		"min_/96": {
+		"min_96": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/96"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:0:0:fffe:fdfc"),
 		},
-		"max_/96": {
+		"max_96": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/96"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ffff:ffff:ffff:aabb:ccdd"),
 		},
-		"min_/128": {
+		"min_128": {
 			address:    netip.MustParseAddr("255.254.253.252"),
 			prefix:     netip.MustParsePrefix("3fff::/128"),
 			expectAddr: netip.MustParseAddr("3fff:0:0:0:0:0:fffe:fdfc"),
 		},
-		"max_/128": {
+		"max_128": {
 			address:    netip.MustParseAddr("170.187.204.221"),
 			prefix:     netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/128"),
 			expectAddr: netip.MustParseAddr("3fff:ffff:ffff:ffff:ffff:ffff:aabb:ccdd"),
@@ -344,139 +344,139 @@ func TestTranslateAddress6to4(t *testing.T) {
 	}
 
 	tests := map[string]testCase{
-		"min_/31": {
+		"min_31": {
 			address:    netip.MustParsePrefix("3fff:0:fffe:fdfc:0:0:0:0/31"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/31": {
+		"max_31": {
 			address:    netip.MustParsePrefix("3fff:fffe:aabb:ccdd:0:0:0:0/31"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/32": {
+		"min_32": {
 			address:    netip.MustParsePrefix("3fff:0:fffe:fdfc:0:0:0:0/32"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/32": {
+		"max_32": {
 			address:    netip.MustParsePrefix("3fff:ffff:aabb:ccdd:0:0:0:0/32"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/33": {
+		"min_33": {
 			address:    netip.MustParsePrefix("3fff:0:ff:fefd:fc:0:0:0/33"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/33": {
+		"max_33": {
 			address:    netip.MustParsePrefix("3fff:ffff:80aa:bbcc:dd:0:0:0/33"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/39": {
+		"min_39": {
 			address:    netip.MustParsePrefix("3fff:0:ff:fefd:fc:0:0:0/39"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/39": {
+		"max_39": {
 			address:    netip.MustParsePrefix("3fff:ffff:feaa:bbcc:dd:0:0:0/39"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/40": {
+		"min_40": {
 			address:    netip.MustParsePrefix("3fff:0:ff:fefd:fc:0:0:0/39"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/40": {
+		"max_40": {
 			address:    netip.MustParsePrefix("3fff:ffff:feaa:bbcc:dd:0:0:0/40"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/41": {
+		"min_41": {
 			address:    netip.MustParsePrefix("3fff:0:0:fffe:fd:fc00:0:0/41"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/41": {
+		"max_41": {
 			address:    netip.MustParsePrefix("3fff:ffff:ff80:aabb:cc:dd00:0:0/41"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/47": {
+		"min_47": {
 			address:    netip.MustParsePrefix("3fff:0:0:fffe:fd:fc00:0:0/47"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/47": {
+		"max_47": {
 			address:    netip.MustParsePrefix("3fff:ffff:fffe:aabb:cc:dd00:0:0/47"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/48": {
+		"min_48": {
 			address:    netip.MustParsePrefix("3fff:0:0:fffe:fd:fc00:0:0/48"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/48": {
+		"max_48": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:aabb:cc:dd00:0:0/48"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/49": {
+		"min_49": {
 			address:    netip.MustParsePrefix("3fff:0:0:ff:fe:fdfc:0:0/49"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/49": {
+		"max_49": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:80aa:bb:ccdd:0:0/49"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/55": {
+		"min_55": {
 			address:    netip.MustParsePrefix("3fff:0:0:ff:fe:fdfc:0:0/55"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/55": {
+		"max_55": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:feaa:bb:ccdd:0:0/55"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/56": {
+		"min_56": {
 			address:    netip.MustParsePrefix("3fff:0:0:ff:fe:fdfc:0:0/56"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/56": {
+		"max_56": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ffaa:bb:ccdd:0:0/56"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/57": {
+		"min_57": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:ff:fefd:fc00:0/57"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/57": {
+		"max_57": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ff80:aa:bbcc:dd00:0/57"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/63": {
+		"min_63": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:ff:fefd:fc00:0/63"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/63": {
+		"max_63": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:fffe:aa:bbcc:dd00:0/63"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/64": {
+		"min_64": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:ff:fefd:fc00:0/64"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/64": {
+		"max_64": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ffff:aa:bbcc:dd00:0/64"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/65": {
+		"min_65": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:0:0:fffe:fdfc/65"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/65": {
+		"max_65": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ffff:8000:0:aabb:ccdd/65"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/96": {
+		"min_96": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:0:0:fffe:fdfc/96"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/96": {
+		"max_96": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:aabb:ccdd/96"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
-		"min_/128": {
+		"min_128": {
 			address:    netip.MustParsePrefix("3fff:0:0:0:0:0:fffe:fdfc/128"),
 			expectAddr: netip.MustParseAddr("255.254.253.252"),
 		},
-		"max_/128": {
+		"max_128": {
 			address:    netip.MustParsePrefix("3fff:ffff:ffff:ffff:ffff:ffff:aabb:ccdd/128"),
 			expectAddr: netip.MustParseAddr("170.187.204.221"),
 		},
