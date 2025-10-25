@@ -1,7 +1,10 @@
 package provider
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/binary"
 	"net/netip"
 	"strings"
 
@@ -169,4 +172,70 @@ func (f generate6OpaqueFunction) Run(
 	}
 
 	resp.Error = function.ConcatFuncErrors(resp.Result.Set(ctx, output.String()))
+}
+
+func computeIPv6AddressOpaque(
+	prefix netip.Addr,
+	netIface []byte,
+	networkID []byte,
+	dadCounter uint32,
+	secretKey []byte,
+) netip.Addr {
+	if !prefix.Is6() || len(netIface) == 0 || len(secretKey) < 16 {
+		return netip.Addr{}
+	}
+
+	newAddress := prefix.AsSlice()
+
+	hash := sha256.New()
+	_, _ = hash.Write(newAddress[0:8]) // It never returns an error.
+	_, _ = hash.Write(netIface)        // It never returns an error.
+	_, _ = hash.Write(networkID)       // It never returns an error.
+	if err := binary.Write(hash, binary.LittleEndian, dadCounter); err != nil {
+		return netip.Addr{}
+	}
+	_, _ = hash.Write(secretKey) // It never returns an error.
+
+	// compute a random identifier and limit to 64bit
+	iid := hash.Sum(nil)[0:8]
+	newAddr, _ := netip.AddrFromSlice(append(newAddress[0:8], iid...))
+
+	// check colision with reserved IPv6 interface identifiers
+	// cf https://www.iana.org/assignments/ipv6-interface-ids/ipv6-interface-ids.xhtml
+	if bytes.Equal(iid,
+		[]byte{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, // 0000:0000:0000:0000
+	) {
+		goto colision
+	}
+	if first, last := bytes.Compare(iid,
+		[]byte{0x02, 0x0, 0x5e, 0xff, 0xfe, 0x0, 0x0, 0x0}, // 0200:5EFF:FE00:0000
+	), bytes.Compare(iid,
+		[]byte{0x02, 0x0, 0x5e, 0xff, 0xfe, 0x0, 0x52, 0x12}, // 0200:5EFF:FE00:5212
+	); first >= 0 && last <= 0 {
+		goto colision
+	}
+	if bytes.Equal(iid,
+		[]byte{0x02, 0x0, 0x5e, 0xff, 0xfe, 0x0, 0x52, 0x13}, // 0200:5EFF:FE00:5213
+	) {
+		goto colision
+	}
+	if first, last := bytes.Compare(iid,
+		[]byte{0x02, 0x0, 0x5e, 0xff, 0xfe, 0x0, 0x52, 0x14}, // 0200:5EFF:FE00:5214
+	), bytes.Compare(iid,
+		[]byte{0x02, 0x0, 0x5e, 0xff, 0xfe, 0xff, 0xff, 0xff}, // 0200:5EFF:FEFF:FFFF
+	); first >= 0 && last <= 0 {
+		goto colision
+	}
+	if first, last := bytes.Compare(iid,
+		[]byte{0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x80}, // FDFF:FFFF:FFFF:FF80
+	), bytes.Compare(iid,
+		[]byte{0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}, // FDFF:FFFF:FFFF:FFFF
+	); first >= 0 && last <= 0 {
+		goto colision
+	}
+
+	return newAddr
+
+colision: // retry with DAD_counter+1
+	return computeIPv6AddressOpaque(prefix, netIface, networkID, dadCounter+1, secretKey)
 }

@@ -113,3 +113,45 @@ func (f translate6to4Function) Run(
 
 	resp.Error = function.ConcatFuncErrors(resp.Result.Set(ctx, output.String()))
 }
+
+func translateAddress6to4(address netip.Prefix) netip.Addr {
+	if !address.IsValid() || !address.Addr().Is6() {
+		return netip.Addr{}
+	}
+
+	switch bits := address.Bits(); {
+	case bits <= 32:
+		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[4:8])
+
+		return result
+	case bits > 32 && bits <= 40:
+		result, _ := netip.AddrFromSlice(append(
+			address.Addr().AsSlice()[5:8],
+			address.Addr().AsSlice()[9:10]...,
+		))
+
+		return result
+	case bits > 40 && bits <= 48:
+		result, _ := netip.AddrFromSlice(append(
+			address.Addr().AsSlice()[6:8],
+			address.Addr().AsSlice()[9:11]...,
+		))
+
+		return result
+	case bits > 48 && bits <= 56:
+		result, _ := netip.AddrFromSlice(append(
+			address.Addr().AsSlice()[7:8],
+			address.Addr().AsSlice()[9:12]...,
+		))
+
+		return result
+	case bits > 56 && bits <= 64:
+		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[9:13])
+
+		return result
+	default:
+		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[12:])
+
+		return result
+	}
+}

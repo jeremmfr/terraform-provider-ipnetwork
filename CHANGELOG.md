@@ -1,6 +1,18 @@
 <!-- markdownlint-disable-file MD013 -->
 # changelog
 
+## [v1.2.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.2.0) (2025-10-25)
+
+FEATURES:
+
+* add new functions:
+  * `is_private(input string) boolean`: reports whether an address or prefix is private (internally routable).
+  * `is_private_rfc1918(input string) boolean`: reports whether an address or prefix is in RFC1918 private address space.
+  * `is_private_rfc4193(input string) boolean`: reports whether an address or prefix is in RFC4193 Unique Local Address (ULA) space.
+  * `is_private_rfc6598(input string) boolean`: reports whether an address or prefix is in RFC6598 Shared Address Space.
+  * `is_public(input string) boolean`: reports whether an address or prefix is public (globally routable).
+  * `summarize(inputs set of string) list of string`: summarize IP prefixes.
+
 ## [v1.1.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.1.0) (2025-09-10)
 
 FEATURES:
