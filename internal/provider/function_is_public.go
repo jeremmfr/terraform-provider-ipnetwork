@@ -165,6 +165,12 @@ func addressV6IsPublic(address netip.Addr) bool {
 		addressBytes[6] == 0x00 && addressBytes[7] == 0x00:
 		// Check for Discard prefix 100::/64 - RFC6666
 		return false
+	case addressBytes[0] == 0x01 && addressBytes[1] == 0x00 &&
+		addressBytes[2] == 0x00 && addressBytes[3] == 0x00 &&
+		addressBytes[4] == 0x00 && addressBytes[5] == 0x00 &&
+		addressBytes[6] == 0x00 && addressBytes[7] == 0x01:
+		// Check for Dummy IPv6 Prefix 100:0:0:1::/64 - RFC9780
+		return false
 	case addressBytes[0] == 0x20 && addressBytes[1] == 0x01 &&
 		addressBytes[2] == 0x00 && addressBytes[3] == 0x02 &&
 		addressBytes[4] == 0x00 && addressBytes[5] == 0x00:
@@ -248,6 +254,7 @@ func prefixV6IsPublic(prefix netip.Prefix) bool {
 		netip.MustParsePrefix("::1/128"),        // Loopback
 		netip.MustParsePrefix("64:ff9b:1::/48"), // Local-Use IPv4/IPv6 Translation - RFC8215
 		netip.MustParsePrefix("100::/64"),       // Discard-Only - RFC6666
+		netip.MustParsePrefix("100:0:0:1::/64"), // Dummy IPv6 Prefix - RFC9780
 		netip.MustParsePrefix("2001:2::/48"),    // Benchmarking - RFC5180
 		netip.MustParsePrefix("2001:db8::/32"),  // Documentation - RFC3849
 		netip.MustParsePrefix("3fff::/20"),      // Documentation - RFC9637
