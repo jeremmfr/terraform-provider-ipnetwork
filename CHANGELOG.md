@@ -1,6 +1,12 @@
 <!-- markdownlint-disable-file MD013 -->
 # changelog
 
+## [v1.2.1](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.2.1) (2025-10-26)
+
+BUG FIXES:
+
+* 🍱 **function/is_public**: fix missing exclusion of `100:0:0:1::/64` (Dummy IPv6 Prefix - RFC9780) from public addresses
+
 ## [v1.2.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.2.0) (2025-10-25)
 
 FEATURES:
