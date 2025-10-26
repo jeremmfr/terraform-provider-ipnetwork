@@ -181,6 +181,14 @@ func TestAddressV6IsPublic(t *testing.T) {
 			input:  netip.MustParseAddr("::ffff:192.168.1.1"),
 			expect: false,
 		},
+		"ipv6_in_dummy_prefix": {
+			input:  netip.MustParseAddr("100::1:1:1:1:1"),
+			expect: false,
+		},
+		"ipv6_beside_dummy_prefix": {
+			input:  netip.MustParseAddr("100::1:1:1:1:1:1"),
+			expect: true,
+		},
 	}
 
 	for name, test := range tests {
@@ -505,6 +513,14 @@ func TestPrefixV6IsPublic(t *testing.T) {
 		},
 		"adjacent_to_db8_public": {
 			input:  netip.MustParsePrefix("2001:dc8::/32"),
+			expect: true,
+		},
+		"dummy_ipv6_prefix": {
+			input:  netip.MustParsePrefix("100::1:1:1:0:0/96"),
+			expect: false,
+		},
+		"adjacent_to_dummy_ipv6_prefix": {
+			input:  netip.MustParsePrefix("100::1:1:1:1:0:0/96"),
 			expect: true,
 		},
 	}
