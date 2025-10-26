@@ -27,6 +27,7 @@ Returns `false` for:
 - Reserved addresses (`240.0.0.0/4`), including broadcast address
 - Documentation ranges (`192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`, `2001:db8::/32`, `3fff::/20`)
 - Discard prefix (`100::/64`)
+- Dummy IPv6 Prefix (`100:0:0:1::/64`)
 - Segment Routing (SRv6) SIDs (`5f00::/16`)
 - IPv4/IPv6 Translation (`64:ff9b:1::/48`)
 
