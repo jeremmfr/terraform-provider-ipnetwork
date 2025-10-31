@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"net/netip"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -225,10 +226,8 @@ func prefixV4IsPublic(prefix netip.Prefix) bool {
 	}
 
 	// Check if prefix overlaps with any non-public range
-	for _, nonPublic := range nonPublicRanges {
-		if prefix.Overlaps(nonPublic) {
-			return false
-		}
+	if slices.ContainsFunc(nonPublicRanges, prefix.Overlaps) {
+		return false
 	}
 
 	return true
@@ -265,10 +264,8 @@ func prefixV6IsPublic(prefix netip.Prefix) bool {
 	}
 
 	// Check if prefix overlaps with any non-public range
-	for _, nonPublic := range nonPublicRanges {
-		if prefix.Overlaps(nonPublic) {
-			return false
-		}
+	if slices.ContainsFunc(nonPublicRanges, prefix.Overlaps) {
+		return false
 	}
 
 	return true
