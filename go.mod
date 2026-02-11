@@ -1,6 +1,6 @@
 module github.com/jeremmfr/terraform-provider-ipnetwork
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.17.0
