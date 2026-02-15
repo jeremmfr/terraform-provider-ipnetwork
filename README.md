@@ -25,4 +25,4 @@ A Terraform provider that provides functions to manipulate IP Network data (addr
 
 ### In addition to develop
 
-- [Go](https://golang.org/doc/install) `v1.24` or later
+- [Go](https://golang.org/doc/install) `v1.25` or later
