@@ -1,6 +1,18 @@
 <!-- markdownlint-disable-file MD013 -->
 # changelog
 
+## [v1.3.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.3.0) (2026-03-14)
+
+FEATURES:
+
+* add new functions:
+  * `range_to_prefixes(start string, end string) list of string`: convert a range of IP addresses defined by a start and end address into the minimal list of CIDR prefixes that exactly cover the range.
+  * `sort(inputs list of string) list of string`: sort a list of IP addresses with or without mask in numerical order.
+
+ENHANCEMENTS:
+
+* release now with Go 1.26.
+
 ## [v1.2.1](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.2.1) (2025-10-26)
 
 BUG FIXES:
