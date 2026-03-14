@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         golang:
-          - '1.24'
           - '1.25'
+          - '1.26'
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go ${{ matrix.golang }}
@@ -24,7 +24,7 @@ jobs:
       - name: Show version
         run: go version
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Build
         run: go build -v .
 
@@ -34,10 +34,10 @@ jobs:
     strategy:
       matrix:
         golang:
-          - '1.24'
           - '1.25'
+          - '1.26'
     steps:
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: 'latest'
           terraform_wrapper: false
@@ -53,6 +53,6 @@ jobs:
       - name: Show version
         run: go version
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Test
         run: go test -v ./...

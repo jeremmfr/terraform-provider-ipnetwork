@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 	"net/netip"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/function"
@@ -118,8 +118,8 @@ func prefixesSummarize(prefixes []netip.Prefix) []netip.Prefix {
 	}
 
 	// sort prefixes for easier comparison
-	sort.Slice(prefixes, func(i, j int) bool {
-		return prefixes[i].Addr().Less(prefixes[j].Addr())
+	slices.SortFunc(prefixes, func(a, b netip.Prefix) int {
+		return a.Addr().Compare(b.Addr())
 	})
 
 	for {
