@@ -1,7 +1,9 @@
 package provider_test
 
 import (
+	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -14,133 +16,133 @@ func TestAccFunctionSummarize(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		input       string
+		input       []string
 		expectError *regexp.Regexp
 		output      []string
 	}
 
 	tests := map[string]testCase{
 		"adjacent_ipv4": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
 				"192.0.3.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/23",
 			},
 		},
 		"adjacent_ipv6": {
-			input: `toset([
+			input: []string{
 				"2001:db8::/64",
 				"2001:db8:0:1::/64",
-			])`,
+			},
 			output: []string{
 				"2001:db8::/63",
 			},
 		},
 		"adjacent_slash_8": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/8",
 				"11.0.0.0/8",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/7",
 			},
 		},
 		"addresses_ipv4": {
-			input: `toset([
+			input: []string{
 				"192.0.2.1",
 				"192.0.2.2",
-			])`,
+			},
 			output: []string{
 				"192.0.2.1/32",
 				"192.0.2.2/32",
 			},
 		},
 		"overlap_ipv4": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
 				"192.0.2.0/25",
 				"192.0.2.128/25",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/24",
 			},
 		},
 		"addresses_ipv6": {
-			input: `toset([
+			input: []string{
 				"2001:db8::1",
 				"2001:db8::2",
-			])`,
+			},
 			output: []string{
 				"2001:db8::1/128",
 				"2001:db8::2/128",
 			},
 		},
 		"mixed_families": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
 				"192.0.3.0/24",
 				"2001:db8::/64",
 				"2001:db8:0:1::/64",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/23",
 				"2001:db8::/63",
 			},
 		},
 		"four_adjacent": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/24",
 				"10.0.1.0/24",
 				"10.0.2.0/24",
 				"10.0.3.0/24",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/22",
 			},
 		},
 		"duplicate": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
 				"192.0.2.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/24",
 			},
 		},
 		"single_prefix": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/24",
 			},
 		},
 		"single_address": {
-			input: `toset([
+			input: []string{
 				"192.0.2.1",
-			])`,
+			},
 			output: []string{
 				"192.0.2.1/32",
 			},
 		},
 		"non_adjacent": {
-			input: `toset([
+			input: []string{
 				"192.0.2.0/24",
 				"192.0.4.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/24",
 				"192.0.4.0/24",
 			},
 		},
 		"all_private_rfc1918": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/8",
 				"172.16.0.0/12",
 				"192.168.0.0/16",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/8",
 				"172.16.0.0/12",
@@ -148,17 +150,17 @@ func TestAccFunctionSummarize(t *testing.T) {
 			},
 		},
 		"completely_overlapping": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/16",
 				"10.0.0.0/20",
 				"10.0.0.0/24",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/16",
 			},
 		},
 		"eight_adjacent_ipv4": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/24",
 				"10.0.1.0/24",
 				"10.0.2.0/24",
@@ -167,13 +169,13 @@ func TestAccFunctionSummarize(t *testing.T) {
 				"10.0.5.0/24",
 				"10.0.6.0/24",
 				"10.0.7.0/24",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/21",
 			},
 		},
 		"eight_adjacent_ipv6": {
-			input: `toset([
+			input: []string{
 				"2001:db8::/64",
 				"2001:db8:0:1::/64",
 				"2001:db8:0:2::/64",
@@ -182,80 +184,80 @@ func TestAccFunctionSummarize(t *testing.T) {
 				"2001:db8:0:5::/64",
 				"2001:db8:0:6::/64",
 				"2001:db8:0:7::/64",
-			])`,
+			},
 			output: []string{
 				"2001:db8::/61",
 			},
 		},
 		"empty_set": {
-			input:  `toset([])`,
+			input:  []string{},
 			output: []string{},
 		},
 		"ipv4_mapped_ipv6": {
-			input: `toset([
+			input: []string{
 				"::ffff:192.0.2.0/120",
 				"::ffff:192.0.3.0/120",
-			])`,
+			},
 			output: []string{
 				"::ffff:192.0.2.0/119",
 			},
 		},
 		"ipv6_link_local": {
-			input: `toset([
+			input: []string{
 				"fe80::/64",
 				"fe80:0:0:1::/64",
-			])`,
+			},
 			output: []string{
 				"fe80::/63",
 			},
 		},
 		"max_prefix_ipv4": {
-			input: `toset([
+			input: []string{
 				"0.0.0.0/0",
 				"192.0.2.0/24",
-			])`,
+			},
 			output: []string{
 				"0.0.0.0/0",
 			},
 		},
 		"max_prefix_ipv6": {
-			input: `toset([
+			input: []string{
 				"::/0",
 				"2001:db8::/32",
-			])`,
+			},
 			output: []string{
 				"::/0",
 			},
 		},
 		"mix_slash_31_and_32": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/31",
 				"10.0.0.2",
 				"10.0.0.3",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/30",
 			},
 		},
 		"mixed_ipv4": {
-			input: `toset([
+			input: []string{
 				"192.0.2.1",
 				"192.0.2.0/25",
 				"192.0.3.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/25",
 				"192.0.3.0/24",
 			},
 		},
 		"multiple_groups": {
-			input: `toset([
+			input: []string{
 				"10.0.0.0/24",
 				"10.0.1.0/24",
 				"10.0.4.0/24",
 				"10.0.5.0/24",
 				"10.0.8.0/24",
-			])`,
+			},
 			output: []string{
 				"10.0.0.0/23",
 				"10.0.4.0/23",
@@ -263,24 +265,24 @@ func TestAccFunctionSummarize(t *testing.T) {
 			},
 		},
 		"reverse_order": {
-			input: `toset([
+			input: []string{
 				"192.0.5.0/24",
 				"192.0.4.0/24",
 				"192.0.3.0/24",
 				"192.0.2.0/24",
-			])`,
+			},
 			output: []string{
 				"192.0.2.0/23",
 				"192.0.4.0/23",
 			},
 		},
 		"subnet_merge": {
-			input: `toset([
+			input: []string{
 				"192.168.0.0/25",
 				"192.168.0.128/25",
 				"192.168.1.0/25",
 				"192.168.1.128/25",
-			])`,
+			},
 			output: []string{
 				"192.168.0.0/23",
 			},
@@ -290,6 +292,11 @@ func TestAccFunctionSummarize(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
+			quotedInput := make([]string, len(test.input))
+			for i, v := range test.input {
+				quotedInput[i] = fmt.Sprintf("%q", v)
+			}
 
 			if test.expectError != nil {
 				resource.UnitTest(t, resource.TestCase{
@@ -301,7 +308,7 @@ func TestAccFunctionSummarize(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::summarize(` + test.input + `)
+								value = provider::ipnetwork::summarize(toset([` + strings.Join(quotedInput, ", ") + `]))
 							}
 							`,
 							ExpectError: test.expectError,
@@ -323,7 +330,7 @@ func TestAccFunctionSummarize(t *testing.T) {
 						{
 							Config: `
 							output "test" {
-								value = provider::ipnetwork::summarize(` + test.input + `)
+								value = provider::ipnetwork::summarize(toset([` + strings.Join(quotedInput, ", ") + `]))
 							}
 							`,
 							ConfigStateChecks: []statecheck.StateCheck{
