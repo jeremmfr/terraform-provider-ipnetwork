@@ -14,6 +14,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jeremmfr/terraform-provider-ipnetwork/blob/main/LICENSE)  
 [![Go Status](https://github.com/jeremmfr/terraform-provider-ipnetwork/actions/workflows/go.yml/badge.svg)](https://github.com/jeremmfr/terraform-provider-ipnetwork/actions/workflows/go.yml)
 [![Linters Status](https://github.com/jeremmfr/terraform-provider-ipnetwork/actions/workflows/linters.yml/badge.svg)](https://github.com/jeremmfr/terraform-provider-ipnetwork/actions/workflows/linters.yml)
+[![Codecov](https://codecov.io/gh/jeremmfr/terraform-provider-ipnetwork/graph/badge.svg)](https://codecov.io/gh/jeremmfr/terraform-provider-ipnetwork)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://www.buymeacoffee.com/jeremmfr)
 <!-- markdownlint-restore -->
 
