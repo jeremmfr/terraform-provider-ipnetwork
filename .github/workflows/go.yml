@@ -55,4 +55,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v6
       - name: Test
-        run: go test -v ./...
+        run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Codecov
+        if: matrix.golang == '1.26'
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.out
+
