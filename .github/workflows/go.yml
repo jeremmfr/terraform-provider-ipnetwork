@@ -58,7 +58,7 @@ jobs:
         run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
       - name: Codecov
         if: matrix.golang == '1.26'
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.out
