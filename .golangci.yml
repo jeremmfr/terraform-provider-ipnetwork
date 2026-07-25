@@ -3,6 +3,8 @@ version: "2"
 linters:
   default: all
   disable:
+    # deprecated
+    - gomodguard
     # unwanted
     - cyclop
     - depguard
@@ -12,6 +14,7 @@ linters:
     - forcetypeassert
     - funcorder
     - funlen
+    - goconst
     - gomoddirectives
     - gosec
     - inamedparam

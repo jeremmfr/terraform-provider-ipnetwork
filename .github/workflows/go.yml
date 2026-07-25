@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go ${{ matrix.golang }}
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.golang }}
           check-latest: true
@@ -24,7 +24,7 @@ jobs:
       - name: Show version
         run: go version
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Build
         run: go build -v .
 
@@ -42,7 +42,7 @@ jobs:
           terraform_version: 'latest'
           terraform_wrapper: false
       - name: Set up Go ${{ matrix.golang }}
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.golang }}
           check-latest: true
@@ -53,6 +53,13 @@ jobs:
       - name: Show version
         run: go version
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Test
-        run: go test -v ./...
+        run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Codecov
+        if: matrix.golang == '1.26'
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.out
+
