@@ -1,6 +1,12 @@
 <!-- markdownlint-disable-file MD013 -->
 # changelog
 
+## [v1.3.1](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.3.1) (2026-07-25)
+
+CHORES:
+
+* update Go dependencies (no functional change).
+
 ## [v1.3.0](https://github.com/jeremmfr/terraform-provider-ipnetwork/tree/v1.3.0) (2026-03-14)
 
 FEATURES:
