@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"net/netip"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -119,38 +120,42 @@ func translateAddress6to4(address netip.Prefix) netip.Addr {
 		return netip.Addr{}
 	}
 
+	addressOcts := address.Addr().AsSlice()
+
+	// layouts of RFC 6052 section 2.2: the embedded IPv4 address follows the prefix,
+	// split around the reserved `u` octet (bits 64 to 71) which carries no address bit
 	switch bits := address.Bits(); {
 	case bits <= 32:
-		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[4:8])
+		result, _ := netip.AddrFromSlice(addressOcts[4:8])
 
 		return result
 	case bits > 32 && bits <= 40:
-		result, _ := netip.AddrFromSlice(append(
-			address.Addr().AsSlice()[5:8],
-			address.Addr().AsSlice()[9:10]...,
+		result, _ := netip.AddrFromSlice(slices.Concat(
+			addressOcts[5:8],
+			addressOcts[9:10],
 		))
 
 		return result
 	case bits > 40 && bits <= 48:
-		result, _ := netip.AddrFromSlice(append(
-			address.Addr().AsSlice()[6:8],
-			address.Addr().AsSlice()[9:11]...,
+		result, _ := netip.AddrFromSlice(slices.Concat(
+			addressOcts[6:8],
+			addressOcts[9:11],
 		))
 
 		return result
 	case bits > 48 && bits <= 56:
-		result, _ := netip.AddrFromSlice(append(
-			address.Addr().AsSlice()[7:8],
-			address.Addr().AsSlice()[9:12]...,
+		result, _ := netip.AddrFromSlice(slices.Concat(
+			addressOcts[7:8],
+			addressOcts[9:12],
 		))
 
 		return result
 	case bits > 56 && bits <= 64:
-		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[9:13])
+		result, _ := netip.AddrFromSlice(addressOcts[9:13])
 
 		return result
 	default:
-		result, _ := netip.AddrFromSlice(address.Addr().AsSlice()[12:])
+		result, _ := netip.AddrFromSlice(addressOcts[12:])
 
 		return result
 	}
