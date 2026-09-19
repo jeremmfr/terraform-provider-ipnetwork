@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"net/netip"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -151,60 +152,63 @@ func translateAddress4to6(address netip.Addr, prefix netip.Prefix) netip.Addr {
 	}
 
 	prefixOcts := prefix.Masked().Addr().AsSlice()
+	addressOcts := address.AsSlice()
 
+	// layouts of RFC 6052 section 2.2: prefix, embedded IPv4 address split around
+	// the reserved `u` octet (bits 64 to 71, kept to zero), then the zeroed suffix
 	switch bits := prefix.Bits(); {
 	case bits <= 32:
-		result, _ := netip.AddrFromSlice(append(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:4],
-			address.AsSlice()...),
-			[]byte{0, 0, 0, 0, 0, 0, 0, 0}...,
+			addressOcts,
+			[]byte{0, 0, 0, 0, 0, 0, 0, 0},
 		))
 
 		return result
 	case bits > 32 && bits <= 40:
-		result, _ := netip.AddrFromSlice(append(append(append(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:5],
-			address.AsSlice()[:3]...),
-			byte(0)),
-			address.AsSlice()[3:]...),
-			[]byte{0, 0, 0, 0, 0, 0}...,
+			addressOcts[:3],
+			[]byte{0},
+			addressOcts[3:],
+			[]byte{0, 0, 0, 0, 0, 0},
 		))
 
 		return result
 	case bits > 40 && bits <= 48:
-		result, _ := netip.AddrFromSlice(append(append(append(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:6],
-			address.AsSlice()[:2]...),
-			byte(0)),
-			address.AsSlice()[2:]...),
-			[]byte{0, 0, 0, 0, 0}...,
+			addressOcts[:2],
+			[]byte{0},
+			addressOcts[2:],
+			[]byte{0, 0, 0, 0, 0},
 		))
 
 		return result
 	case bits > 48 && bits <= 56:
-		result, _ := netip.AddrFromSlice(append(append(append(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:7],
-			address.AsSlice()[:1]...),
-			byte(0)),
-			address.AsSlice()[1:]...),
-			[]byte{0, 0, 0, 0}...,
+			addressOcts[:1],
+			[]byte{0},
+			addressOcts[1:],
+			[]byte{0, 0, 0, 0},
 		))
 
 		return result
 	case bits > 56 && bits <= 64:
-		result, _ := netip.AddrFromSlice(append(append(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:8],
-			byte(0)),
-			address.AsSlice()...),
-			[]byte{0, 0, 0}...,
+			[]byte{0},
+			addressOcts,
+			[]byte{0, 0, 0},
 		))
 
 		return result
 	default:
-		result, _ := netip.AddrFromSlice(append(
+		result, _ := netip.AddrFromSlice(slices.Concat(
 			prefixOcts[:12],
-			address.AsSlice()...),
-		)
+			addressOcts,
+		))
 
 		return result
 	}
